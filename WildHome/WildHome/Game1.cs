@@ -12,10 +12,9 @@ namespace WildHome
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         private KeyboardState _keyboardState;
+        private KeyboardState _keyboardStateOld;
         private Physics.PhysicalObject _joueur;
         private SpriteFont _font;
-        private float gravity;
-        private int _alpha;
 
 
         public Game1()
@@ -23,7 +22,7 @@ namespace WildHome
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
-        
+
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -34,10 +33,12 @@ namespace WildHome
         {
             // TODO: Add your initialization logic here
             _joueur = new Physics.PhysicalObject(10);
-            this._joueur.Speed = new Vector2(0, 0);
-            this._joueur.Acceleration = new Vector2(1, 0);
-            this.gravity = 0.5f; //
-            this._alpha = 10; //FACTEUR ACCELERATION
+            this._joueur.InitialSpeed = new Vector2(0, 0);
+            this._joueur.InitialAcceleration = new Vector2(0, 0);
+            this._joueur.Speed = this._joueur.InitialSpeed;
+            this._joueur.Acceleration = this._joueur.InitialAcceleration;
+            this._joueur.VitesseMax = 1.5f;
+            this._joueur.Alpha = 5;
 
             base.Initialize();
         }
@@ -84,10 +85,59 @@ namespace WildHome
             if (_keyboardState.IsKeyDown(Keys.D))
             {
 
-                this._joueur.Acceleration = new Vector2(gravity - this._joueur.Speed.X/this._alpha, 0);
+                this._joueur.Acceleration = new Vector2(this._joueur.VitesseMax - this._joueur.Speed.X / this._joueur.Alpha, this._joueur.Acceleration.Y);
                 this._joueur.Speed += this._joueur.Acceleration;
                 this._joueur.Position += this._joueur.Speed;
             }
+            if (_keyboardState.IsKeyUp(Keys.D) && _keyboardStateOld.IsKeyDown(Keys.D))
+            {
+                this._joueur.Speed = this._joueur.InitialSpeed;
+                this._joueur.Acceleration = this._joueur.InitialAcceleration;
+            }
+
+            if (_keyboardState.IsKeyDown(Keys.Q))
+            {
+
+                this._joueur.Acceleration = new Vector2(-this._joueur.VitesseMax - this._joueur.Speed.X / this._joueur.Alpha, this._joueur.Acceleration.Y);
+                this._joueur.Speed += this._joueur.Acceleration;
+                this._joueur.Position += this._joueur.Speed;
+            }
+            if (_keyboardState.IsKeyUp(Keys.Q) && _keyboardStateOld.IsKeyDown(Keys.Q))
+            {
+                this._joueur.Speed = this._joueur.InitialSpeed;
+                this._joueur.Acceleration = this._joueur.InitialAcceleration;
+            }
+
+            if (_keyboardState.IsKeyDown(Keys.S))
+            {
+
+                this._joueur.Acceleration = new Vector2(this._joueur.Acceleration.X, this._joueur.VitesseMax - this._joueur.Speed.Y / this._joueur.Alpha);
+                this._joueur.Speed += this._joueur.Acceleration;
+                this._joueur.Position += this._joueur.Speed;
+            }
+            if (_keyboardState.IsKeyUp(Keys.S) && _keyboardStateOld.IsKeyDown(Keys.S))
+            {
+                this._joueur.Speed = this._joueur.InitialSpeed;
+                this._joueur.Acceleration = this._joueur.InitialAcceleration;
+            }
+
+            if (_keyboardState.IsKeyDown(Keys.Z))
+            {
+
+                this._joueur.Acceleration = new Vector2(this._joueur.Acceleration.X, -this._joueur.VitesseMax - this._joueur.Speed.Y / this._joueur.Alpha);
+                this._joueur.Speed += this._joueur.Acceleration;
+                this._joueur.Position += this._joueur.Speed;
+            }
+            if (_keyboardState.IsKeyUp(Keys.Z) && _keyboardStateOld.IsKeyDown(Keys.Z))
+            {
+                this._joueur.Speed = this._joueur.InitialSpeed;
+                this._joueur.Acceleration = this._joueur.InitialAcceleration;
+            }
+
+
+
+
+            _keyboardStateOld = _keyboardState;
 
             base.Update(gameTime);
         }

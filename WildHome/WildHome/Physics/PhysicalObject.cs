@@ -12,7 +12,7 @@ namespace WildHome.Physics
 {
     class PhysicalObject
     {
-        //VARIABLE
+        //VARIABLES
 
         private Texture2D _texture;
 
@@ -23,8 +23,14 @@ namespace WildHome.Physics
         protected Vector2 _position;
         protected Vector2 _speed;
         protected Vector2 _acceleration;
-
+        protected Vector2 _initialPosition;
+        protected Vector2 _initialSpeed;
+        protected Vector2 _initialAcceleration;
+        protected float _vitesseMax; // Vitesse max (a multiplier par alpha pour obtenir la vitesse en pixel/tics)
+        protected float _alpha; // FACTEUR D'ACCELERATION
         private World _world;
+
+
 
         public Vector2 Position
         {
@@ -42,6 +48,36 @@ namespace WildHome.Physics
         {
             get { return _acceleration; }
             set { _acceleration = value; }
+        }
+
+        public Vector2 InitialPosition
+        {
+            get { return _initialPosition; }
+            set { _initialPosition = value; }
+        }
+
+        public Vector2 InitialSpeed
+        {
+            get { return _initialSpeed; }
+            set { _initialSpeed = value; }
+        }
+
+        public Vector2 InitialAcceleration
+        {
+            get { return _initialAcceleration; }
+            set { _initialAcceleration = value; }
+        }
+
+        public float VitesseMax
+        {
+            get { return this._vitesseMax; }
+            set { _vitesseMax = value; }
+        }
+
+        public float Alpha
+        {
+            get { return this._alpha; }
+            set { _alpha = value; }
         }
 
 
