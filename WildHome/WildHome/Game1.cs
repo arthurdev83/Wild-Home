@@ -11,13 +11,18 @@ namespace WildHome
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        private KeyboardState _keyboardState;
+        private Physics.PhysicalObject _joueur;
+        private int x;
+        private SpriteFont _font;
+
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
-
+        
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -27,6 +32,8 @@ namespace WildHome
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            _joueur = new Physics.PhysicalObject(10);
+
 
             base.Initialize();
         }
@@ -39,6 +46,9 @@ namespace WildHome
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            _font = Content.Load<SpriteFont>("maFont");
+
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -59,10 +69,17 @@ namespace WildHome
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            _keyboardState = Keyboard.GetState();
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             // TODO: Add your update logic here
+
+            if (_keyboardState.IsKeyDown(Keys.D))
+            {
+                this._joueur.Position += new Vector2(1, 0);
+            }
 
             base.Update(gameTime);
         }
@@ -76,6 +93,11 @@ namespace WildHome
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+
+            spriteBatch.Begin();
+            spriteBatch.DrawString(_font, this._joueur.Position.ToString(), new Vector2(10, 20), Color.White);
+            spriteBatch.End();
+
 
             base.Draw(gameTime);
         }

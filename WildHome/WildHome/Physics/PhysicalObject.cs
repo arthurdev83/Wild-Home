@@ -21,6 +21,26 @@ namespace WildHome.Physics
 
         private World _world;
 
+        public Vector2 Position
+        {
+            get { return _position; }
+            set { _position = value; }
+        }
+
+        public Vector2 Speed
+        {
+            get { return _speed; }
+            set { _speed = value; }
+        }
+
+        public Vector2 Acceleration
+        {
+            get { return _acceleration; }
+            set { _acceleration = value; }
+        }
+
+
+
         //CONSTRUCTOR
         public PhysicalObject(float mass)
         {
