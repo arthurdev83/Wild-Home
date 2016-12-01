@@ -13,8 +13,8 @@ namespace WildHome
         SpriteBatch spriteBatch;
         private KeyboardState _keyboardState;
         private Physics.PhysicalObject _joueur;
-        private int x;
         private SpriteFont _font;
+        private float gravity;
 
 
         public Game1()
@@ -33,7 +33,9 @@ namespace WildHome
         {
             // TODO: Add your initialization logic here
             _joueur = new Physics.PhysicalObject(10);
-
+            this._joueur.Speed = new Vector2(0, 0);
+            this._joueur.Acceleration = new Vector2(1, 0);
+            this.gravity = 0.01f;
 
             base.Initialize();
         }
@@ -78,7 +80,10 @@ namespace WildHome
 
             if (_keyboardState.IsKeyDown(Keys.D))
             {
-                this._joueur.Position += new Vector2(1, 0);
+
+                this._joueur.Acceleration = new Vector2(gravity - this._joueur.Speed.X/200, 0);
+                this._joueur.Speed += this._joueur.Acceleration;
+                this._joueur.Position += this._joueur.Speed;
             }
 
             base.Update(gameTime);
@@ -95,9 +100,11 @@ namespace WildHome
             // TODO: Add your drawing code here
 
             spriteBatch.Begin();
-            spriteBatch.DrawString(_font, this._joueur.Position.ToString(), new Vector2(10, 20), Color.White);
-            spriteBatch.End();
+            spriteBatch.DrawString(_font, "Position : " + this._joueur.Position.ToString(), new Vector2(10, 20), Color.White);
+            spriteBatch.DrawString(_font, "Vitesse : " + this._joueur.Speed.ToString(), new Vector2(10, 35), Color.White);
+            spriteBatch.DrawString(_font, "Acceleration : " + this._joueur.Acceleration.ToString(), new Vector2(10, 50), Color.White);
 
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
