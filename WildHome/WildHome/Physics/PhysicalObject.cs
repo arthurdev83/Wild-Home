@@ -6,12 +6,17 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Content;
 
 namespace WildHome.Physics
 {
     class PhysicalObject
     {
         //VARIABLE
+
+        private Texture2D _texture;
+
+
         protected float _mass;
         protected float _angle;
 
@@ -50,6 +55,16 @@ namespace WildHome.Physics
             this._position = Vector2.Zero;
             this._speed = Vector2.Zero;
             this._acceleration = Vector2.Zero;
+        }
+
+        public void LoadContent(ContentManager content)
+        {
+            this._texture = content.Load<Texture2D>("player");
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(this._texture, this._position, Color.White);
         }
 
     }

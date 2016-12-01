@@ -15,6 +15,7 @@ namespace WildHome
         private Physics.PhysicalObject _joueur;
         private SpriteFont _font;
         private float gravity;
+        private int _alpha;
 
 
         public Game1()
@@ -35,7 +36,8 @@ namespace WildHome
             _joueur = new Physics.PhysicalObject(10);
             this._joueur.Speed = new Vector2(0, 0);
             this._joueur.Acceleration = new Vector2(1, 0);
-            this.gravity = 0.01f;
+            this.gravity = 0.5f; //
+            this._alpha = 10; //FACTEUR ACCELERATION
 
             base.Initialize();
         }
@@ -49,6 +51,7 @@ namespace WildHome
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             _font = Content.Load<SpriteFont>("maFont");
+            this._joueur.LoadContent(Content);
 
 
 
@@ -81,7 +84,7 @@ namespace WildHome
             if (_keyboardState.IsKeyDown(Keys.D))
             {
 
-                this._joueur.Acceleration = new Vector2(gravity - this._joueur.Speed.X/200, 0);
+                this._joueur.Acceleration = new Vector2(gravity - this._joueur.Speed.X/this._alpha, 0);
                 this._joueur.Speed += this._joueur.Acceleration;
                 this._joueur.Position += this._joueur.Speed;
             }
@@ -103,7 +106,7 @@ namespace WildHome
             spriteBatch.DrawString(_font, "Position : " + this._joueur.Position.ToString(), new Vector2(10, 20), Color.White);
             spriteBatch.DrawString(_font, "Vitesse : " + this._joueur.Speed.ToString(), new Vector2(10, 35), Color.White);
             spriteBatch.DrawString(_font, "Acceleration : " + this._joueur.Acceleration.ToString(), new Vector2(10, 50), Color.White);
-
+            this._joueur.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
