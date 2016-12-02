@@ -12,7 +12,8 @@ namespace WildHome
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        private Physics.PhysicalObject _joueur;
+        private Entity.Player _joueur;
+        private Physics.PhysicalObject _obstacle;
         private SpriteFont _font;
 
         public Game1()
@@ -26,11 +27,13 @@ namespace WildHome
         {
             this.IsMouseVisible = true;
 
-            _joueur = new Entity.Player();
+            this._joueur = new Entity.Player();
+            this. _obstacle = new Physics.PhysicalObject();
+            this._obstacle.Position = new Vector2(200, 342);
 
             base.Initialize();
         }
-
+        
 
         protected override void LoadContent()
         {
@@ -39,6 +42,7 @@ namespace WildHome
             _font = Content.Load<SpriteFont>("maFont");
 
             this._joueur.LoadContent(Content);
+            this._obstacle.LoadContent(Content);
         }
 
 
@@ -68,6 +72,7 @@ namespace WildHome
             spriteBatch.DrawString(_font, "Vitesse : " + this._joueur.Speed.ToString(), new Vector2(10, 35), Color.White);
             spriteBatch.DrawString(_font, "Acceleration : " + this._joueur.Acceleration.ToString(), new Vector2(10, 50), Color.White);
             this._joueur.Draw(spriteBatch);
+            this._obstacle.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
