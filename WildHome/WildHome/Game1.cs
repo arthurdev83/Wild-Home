@@ -11,139 +11,57 @@ namespace WildHome
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        private KeyboardState _keyboardState;
-        private KeyboardState _keyboardStateOld;
+
         private Physics.PhysicalObject _joueur;
         private SpriteFont _font;
-        private float gravity;
-        private int AlphaY;
-        private int _jumpStrength;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+        }
 
-    }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize()
         {
             this.IsMouseVisible = true;
 
-            // TODO: Add your initialization logic here
-            _joueur = new Physics.PhysicalObject(10);
-            this._joueur.InitialSpeed = new Vector2(0, 0);
-            this._joueur.InitialAcceleration = new Vector2(0, 0);
-            this._joueur.Speed = this._joueur.InitialSpeed;
-            this._joueur.Acceleration = this._joueur.InitialAcceleration;
-            this._joueur.VitesseMax = 1.5f;
-            this._joueur.Alpha = 5;
-            this._jumpStrength = 20;
+            _joueur = new Entity.Player();
 
-            this.gravity = 1.45f;
-            this.AlphaY = 50;
             base.Initialize();
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
+
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             _font = Content.Load<SpriteFont>("maFont");
+
             this._joueur.LoadContent(Content);
+        }
 
 
-        // TODO: use this.Content to load your game content here
-    }
-
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
-        /// </summary>
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+
         protected override void Update(GameTime gameTime)
         {
-            _keyboardState = Keyboard.GetState();
+
+            this._joueur.Update(gameTime);
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
-
-
-            //GAUCHE DROITE
-            if (_keyboardState.IsKeyDown(Keys.D))
-            {
-
-                this._joueur.Acceleration = new Vector2(this._joueur.VitesseMax - this._joueur.Speed.X / this._joueur.Alpha, this._joueur.Acceleration.Y);
-            }
-            if (_keyboardState.IsKeyDown(Keys.Q))
-            {
-
-                this._joueur.Acceleration = new Vector2(-this._joueur.VitesseMax - this._joueur.Speed.X / this._joueur.Alpha, this._joueur.Acceleration.Y);
-            }
-
-            //On relache
-            if (_keyboardState.IsKeyUp(Keys.Q) && _keyboardStateOld.IsKeyDown(Keys.Q) || _keyboardState.IsKeyUp(Keys.D) && _keyboardStateOld.IsKeyDown(Keys.D))
-            {
-                this._joueur.Speed = new Vector2(this._joueur.InitialSpeed.X, this._joueur.Speed.Y);
-                this._joueur.Acceleration = new Vector2(this._joueur.InitialAcceleration.X, this._joueur.Acceleration.Y);
-            }
-
-
-            ///SAUT
-            if (!this._joueur.IsOnTheFloor())
-            {
-                this._joueur.Acceleration = new Vector2(this._joueur.Acceleration.X, this.gravity - this._joueur.Speed.Y / this.AlphaY);
-            }
-            else
-            {
-                this._joueur.Acceleration = new Vector2(this._joueur.Acceleration.X, this._joueur.InitialAcceleration.Y);
-                this._joueur.Speed = new Vector2(this._joueur.Speed.X, this._joueur.InitialSpeed.Y);
-            }
-            
-
-            if (_keyboardState.IsKeyDown(Keys.Space) && _keyboardStateOld.IsKeyDown(Keys.Space) && this._joueur.IsOnTheFloor())
-            {
-                this._joueur.Speed = new Vector2(this._joueur.Speed.X, -this._jumpStrength);
-            }
-
-            this._joueur.Speed += this._joueur.Acceleration;
-            this._joueur.Position += this._joueur.Speed;
-            _keyboardStateOld = _keyboardState;
-
-
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
 
             spriteBatch.Begin();
             spriteBatch.DrawString(_font, "Position : " + this._joueur.Position.ToString(), new Vector2(10, 20), Color.White);

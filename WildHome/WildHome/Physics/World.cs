@@ -21,7 +21,7 @@ namespace WildHome.Physics
         }
 
         //CONSTRUCTOR
-        public World(float gravity = 9.8f)
+        public World(float gravity = 1.45f)
         {
             this.physicalObjects = new List<PhysicalObject>();
             this._gravity = gravity;
