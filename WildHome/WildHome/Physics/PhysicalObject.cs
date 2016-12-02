@@ -103,5 +103,9 @@ namespace WildHome.Physics
             spriteBatch.Draw(this._texture, this._position, Color.White);
         }
 
+        public bool IsOnTheFloor()
+        {
+            return (this.Position.Y>400);
+        }
     }
 }
