@@ -17,12 +17,14 @@ namespace WildHome
         private SpriteFont _font;
         private float gravity;
         private int AlphaY;
+        private int _jumpStrength;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-        }
+
+    }
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -32,17 +34,20 @@ namespace WildHome
         /// </summary>
         protected override void Initialize()
         {
+            this.IsMouseVisible = true;
+
             // TODO: Add your initialization logic here
             _joueur = new Physics.PhysicalObject(10);
             this._joueur.InitialSpeed = new Vector2(0, 0);
             this._joueur.InitialAcceleration = new Vector2(0, 0);
             this._joueur.Speed = this._joueur.InitialSpeed;
             this._joueur.Acceleration = this._joueur.InitialAcceleration;
-            this._joueur.VitesseMax = 2.5f;
+            this._joueur.VitesseMax = 1.5f;
             this._joueur.Alpha = 5;
+            this._jumpStrength = 20;
 
-            this.gravity = 2.5f;
-            this.AlphaY = 10;
+            this.gravity = 1.45f;
+            this.AlphaY = 50;
             base.Initialize();
         }
 
@@ -58,9 +63,8 @@ namespace WildHome
             this._joueur.LoadContent(Content);
 
 
-
-            // TODO: use this.Content to load your game content here
-        }
+        // TODO: use this.Content to load your game content here
+    }
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -92,18 +96,14 @@ namespace WildHome
 
                 this._joueur.Acceleration = new Vector2(this._joueur.VitesseMax - this._joueur.Speed.X / this._joueur.Alpha, this._joueur.Acceleration.Y);
             }
-            if (_keyboardState.IsKeyUp(Keys.D) && _keyboardStateOld.IsKeyDown(Keys.D))
-            {
-                this._joueur.Speed = new Vector2(this._joueur.InitialSpeed.X, this._joueur.Speed.Y);
-                this._joueur.Acceleration = new Vector2(this._joueur.InitialAcceleration.X, this._joueur.Acceleration.Y);
-            }
-
             if (_keyboardState.IsKeyDown(Keys.Q))
             {
 
                 this._joueur.Acceleration = new Vector2(-this._joueur.VitesseMax - this._joueur.Speed.X / this._joueur.Alpha, this._joueur.Acceleration.Y);
             }
-            if (_keyboardState.IsKeyUp(Keys.Q) && _keyboardStateOld.IsKeyDown(Keys.Q))
+
+            //On relache
+            if (_keyboardState.IsKeyUp(Keys.Q) && _keyboardStateOld.IsKeyDown(Keys.Q) || _keyboardState.IsKeyUp(Keys.D) && _keyboardStateOld.IsKeyDown(Keys.D))
             {
                 this._joueur.Speed = new Vector2(this._joueur.InitialSpeed.X, this._joueur.Speed.Y);
                 this._joueur.Acceleration = new Vector2(this._joueur.InitialAcceleration.X, this._joueur.Acceleration.Y);
@@ -124,7 +124,7 @@ namespace WildHome
 
             if (_keyboardState.IsKeyDown(Keys.Space) && _keyboardStateOld.IsKeyDown(Keys.Space) && this._joueur.IsOnTheFloor())
             {
-                this._joueur.Speed = new Vector2(this._joueur.Speed.X, -42);
+                this._joueur.Speed = new Vector2(this._joueur.Speed.X, -this._jumpStrength);
             }
 
             this._joueur.Speed += this._joueur.Acceleration;
