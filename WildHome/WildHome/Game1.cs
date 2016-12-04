@@ -69,6 +69,10 @@ namespace WildHome
                     
                 }
 
+                if (this._joueur.IsIntersecting(new Vector2(this._joueur.PositionOld.X, this._joueur.Position.Y), this._obstacle))
+                {
+
+                }
 
 
 
