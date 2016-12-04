@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace WildHome
 {
@@ -12,70 +13,82 @@ namespace WildHome
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        private Entity.Player _joueur;
+        private Physics.PhysicalObject _obstacle;
+        private SpriteFont _font;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
+
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            this.IsMouseVisible = true;
+
+            this._joueur = new Entity.Player();
+            this. _obstacle = new Physics.PhysicalObject();
+            this._obstacle.Position = new Vector2(200, 342);
 
             base.Initialize();
         }
+        
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            _font = Content.Load<SpriteFont>("maFont");
 
-            // TODO: use this.Content to load your game content here
+            this._joueur.LoadContent(Content);
+            this._obstacle.LoadContent(Content);
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
-        /// </summary>
+
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+
         protected override void Update(GameTime gameTime)
         {
+
+            this._joueur.Update(gameTime);
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            //GESTION DE COLLISION
+            if (this._joueur.IsIntersecting(this._joueur.Position, this._obstacle))
+            {
+                if (this._joueur.IsIntersecting(new Vector2(this._joueur.Position.X, this._joueur.PositionOld.Y), this._obstacle))
+                {
+                    
+                }
+
+
+
+
+
+            }
 
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            spriteBatch.DrawString(_font, "Position : " + this._joueur.Position.ToString(), new Vector2(10, 20), Color.White);
+            spriteBatch.DrawString(_font, "Vitesse : " + this._joueur.Speed.ToString(), new Vector2(10, 35), Color.White);
+            spriteBatch.DrawString(_font, "Acceleration : " + this._joueur.Acceleration.ToString(), new Vector2(10, 50), Color.White);
+            this._joueur.Draw(spriteBatch);
+            this._obstacle.Draw(spriteBatch);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
