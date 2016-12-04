@@ -14,7 +14,7 @@ namespace WildHome.Physics
     {
         //VARIABLES
 
-        private Texture2D _texture;
+        protected Texture2D _texture;
 
         protected float _mass;
         protected float _angle;
@@ -97,7 +97,7 @@ namespace WildHome.Physics
         //METHODE
         public virtual void LoadContent(ContentManager content)
         {
-            this._texture = content.Load<Texture2D>("player");
+
         }
 
         public virtual void Update(GameTime gameTime)
@@ -112,20 +112,15 @@ namespace WildHome.Physics
         {
             spriteBatch.Draw(this._texture, this._position, Color.White);
         }
+        
 
-        //Tester si on est au sol
-        public bool IsOnTheFloor()
-        {
-            return (this.Position.Y > 400);
-        }
-
-        //Appliquer une impulsion
+        //Appliquer une impulsion verticale
         public void ApplyImpulsion(int strength)
         {
             this._speed = new Vector2(this._speed.X, -strength);
         }
 
-        //Appliquer une force directionnelle
+        //Appliquer une force directionnelle horizontale
         public void ApplyForce(Utilities.Direction dir)
         {
             this._acceleration = new Vector2(((dir == 0 ? -1 : 1) * this._vitesseMaxX) - this._speed.X / this._alphaX, this._acceleration.Y);
@@ -144,5 +139,7 @@ namespace WildHome.Physics
                     position.Y < box2.Position.Y + box2._texture.Height &&
                     position.Y + this._texture.Height > box2.Position.Y);
         }
+
+        
     }
 }

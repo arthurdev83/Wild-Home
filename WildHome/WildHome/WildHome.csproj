@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Entity\Player.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="Entity\Obstacle.cs" />
     <Compile Include="Physics\PhysicalObject.cs" />
     <Compile Include="Physics\Utilities.cs" />
     <Compile Include="Physics\World.cs" />
@@ -61,6 +62,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\player.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\sol.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Icon.ico" />
