@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace WildHome
 {
@@ -59,6 +60,20 @@ namespace WildHome
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            //GESTION DE COLLISION
+            if (this._joueur.IsIntersecting(this._joueur.Position, this._obstacle))
+            {
+                if (this._joueur.IsIntersecting(new Vector2(this._joueur.Position.X, this._joueur.PositionOld.Y), this._obstacle))
+                {
+                    
+                }
+
+
+
+
+
+            }
 
             base.Update(gameTime);
         }

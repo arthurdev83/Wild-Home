@@ -25,7 +25,7 @@ namespace WildHome.Entity
             this._initialAcceleration = new Vector2(0, 0);
             this._speed = this._initialSpeed;
             this._acceleration = this._initialAcceleration;
-            this._vitesseMax = 1.5f;
+            this._vitesseMaxX = 1.5f;
             this._alphaX = 5;
             this._alphaY = 50;
         }
@@ -52,11 +52,24 @@ namespace WildHome.Entity
             }
 
 
+            ///SAUT UPDATE
+            if (!this.IsOnTheFloor())
+            {
+
+                this._acceleration = new Vector2(this._acceleration.X, this.gravity - this._speed.Y / this._alphaY);
+            }
+            else
+            {
+                this._acceleration = new Vector2(this._acceleration.X, this._initialAcceleration.Y);
+                this._speed = new Vector2(this._speed.X, this._initialSpeed.Y);
+            }
+            
+
             //On relache
             if (_keyboardState.IsKeyUp(Keys.Q) && _keyboardStateOld.IsKeyDown(Keys.Q) 
                 || _keyboardState.IsKeyUp(Keys.D) && _keyboardStateOld.IsKeyDown(Keys.D))
             {
-                this.ResetForce();
+                this.ResetForceX();
             }
 
             //Gestion du saut
@@ -64,6 +77,11 @@ namespace WildHome.Entity
             {
                 this.ApplyImpulsion(20);
             }
+
+            //GESTION COLLISION
+            this._positionOld = this.Position;
+
+
 
             _keyboardStateOld = _keyboardState;
 

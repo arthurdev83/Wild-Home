@@ -18,11 +18,12 @@ namespace WildHome.Physics
 
         protected float _mass;
         protected float _angle;
-        protected float _vitesseMax; // Vitesse max (a multiplier par alpha pour obtenir la vitesse en pixel/tics)
+        protected float _vitesseMaxX; // Vitesse max sur X(a multiplier par alphaX pour obtenir la vitesse en pixel/tics)
         protected float _alphaX; // FACTEUR D'ACCELERATION
         protected float _alphaY;
 
         protected Vector2 _position;
+        protected Vector2 _positionOld;
         protected Vector2 _speed;
         protected Vector2 _acceleration;
         protected Vector2 _initialPosition;
@@ -30,52 +31,49 @@ namespace WildHome.Physics
         protected Vector2 _initialAcceleration;
 
         protected float gravity;
-
         private World _world;
 
-        //PROPERTYS
+        //PROPERTIES
         public Vector2 Position
         {
             get { return _position; }
             set { this._position = value; }
         }
-
+        public Vector2 PositionOld
+        {
+            get { return _positionOld; }
+            set { this._positionOld = value; }
+        }
         public Vector2 Speed
         {
             get { return _speed; }
             set { this._speed = value; }
         }
-
         public Vector2 Acceleration
         {
             get { return _acceleration; }
             set { this._acceleration = value; }
         }
-
         public Vector2 InitialPosition
         {
             get { return _initialPosition; }
             set { this._initialPosition = value; }
         }
-
         public Vector2 InitialSpeed
         {
             get { return _initialSpeed; }
             set { this._initialSpeed = value; }
         }
-
         public Vector2 InitialAcceleration
         {
             get { return _initialAcceleration; }
             set { this._initialAcceleration = value; }
         }
-
         public float VitesseMax
         {
-            get { return this._vitesseMax; }
-            set { this._vitesseMax = value; }
+            get { return this._vitesseMaxX; }
+            set { this._vitesseMaxX = value; }
         }
-
         public float Alpha
         {
             get { return this._alphaX; }
@@ -108,17 +106,6 @@ namespace WildHome.Physics
             this._speed += this._acceleration;
             this._position += this._speed;
 
-            ///SAUT UPDATE
-            if (!this.IsOnTheFloor())
-            {
-                
-                this._acceleration = new Vector2(this._acceleration.X, this.gravity - this._speed.Y / this._alphaY);
-            }
-            else
-            {
-                this._acceleration = new Vector2(this._acceleration.X, this._initialAcceleration.Y);
-                this._speed = new Vector2(this._speed.X, this._initialSpeed.Y);
-            }
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)
@@ -141,14 +128,21 @@ namespace WildHome.Physics
         //Appliquer une force directionnelle
         public void ApplyForce(Utilities.Direction dir)
         {
-            this._acceleration = new Vector2(((dir == 0 ? -1 : 1 )*this._vitesseMax) - this._speed.X / this._alphaX, this._acceleration.Y);
+            this._acceleration = new Vector2(((dir == 0 ? -1 : 1) * this._vitesseMaxX) - this._speed.X / this._alphaX, this._acceleration.Y);
         }
 
-        public void ResetForce()
+        public void ResetForceX()
         {
             this._speed = new Vector2(this._initialSpeed.X, this._speed.Y);
             this._acceleration = new Vector2(this._initialAcceleration.X, this._acceleration.Y);
         }
 
+        public bool IsIntersecting(Vector2 position, Physics.PhysicalObject box2) //Ne marche qu'avec des rectangles AABB
+        {
+            return (position.X < box2.Position.X + box2._texture.Width &&
+                    position.X + this._texture.Width > box2.Position.X &&
+                    position.Y < box2.Position.Y + box2._texture.Height &&
+                    position.Y + this._texture.Height > box2.Position.Y);
+        }
     }
 }
