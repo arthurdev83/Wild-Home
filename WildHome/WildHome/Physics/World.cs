@@ -1,36 +1,72 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using WildHome.PhysicalEntity;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace WildHome.Physics
 {
     class World
     {
         //VARIABLE
-        private float _gravity;
+        private List<Entity> physicalEntities;
+        private List<Obstacle> obstacles;
 
-        private List<PhysicalObject> physicalObjects;
-
-        //PROPERTY
-        public float Gravity
-        {
-            get { return this._gravity; }
-            set { this._gravity = value; }
-        }
 
         //CONSTRUCTOR
-        public World(float gravity = 1.45f)
+        public World()
         {
-            this.physicalObjects = new List<PhysicalObject>();
-            this._gravity = gravity;
+            this.physicalEntities = new List<Entity>();
+            this.obstacles = new List<Obstacle>();
+        }
+
+        //UPDATE
+        public void Update(GameTime gameTime)
+        {
+            //Appel des méthode Update des objets
+            foreach (Entity entity in physicalEntities)
+            {
+                entity.Update(gameTime); //Update
+            }
+            foreach (Obstacle obstacle in obstacles)
+            {
+                obstacle.Update(gameTime);
+            }
+
+            //Gestion des colisions
+            foreach (Entity entity in physicalEntities)
+            {
+                foreach (Obstacle obstacle in obstacles)
+                {
+                    entity.UpdateCollision(obstacle);
+                }
+            }
+        }
+
+        //DRAW
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            //Appel des méthode Draw des objets
+            foreach (Entity entity in physicalEntities)
+            {
+                spriteBatch.Draw(entity.Texture, entity.Position, Color.White);
+            }
+
+            foreach (Obstacle obstacle in obstacles)
+            {
+                spriteBatch.Draw(obstacle.Texture, obstacle.Position, Color.White);
+            }
         }
 
         //Add Physical Object to World
-        public void AddPhysicalObject(PhysicalObject physicalObject)
+        public void AddPhysicalEntity(Entity physicalObject)
         {
-            this.physicalObjects.Add(physicalObject);
+            this.physicalEntities.Add(physicalObject);
+        }
+
+        //Add Obstacle
+        public void AddObstacle(Obstacle obstacle)
+        {
+            this.obstacles.Add(obstacle);
         }
     }
 }
