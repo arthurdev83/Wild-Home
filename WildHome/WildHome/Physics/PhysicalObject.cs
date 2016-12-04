@@ -19,7 +19,7 @@ namespace WildHome.Physics
         protected Vector2 _initialSpeed;
         protected Vector2 _initialAcceleration;
 
-        protected bool _isOnTheGround;
+        public bool _isOnTheGround;
 
         protected float gravity;
         private World _world;

@@ -25,11 +25,14 @@ namespace WildHome.PhysicalEntity
                     !this.IsIntersecting(new Vector2(this.PositionOld.X, this.Position.Y), obstacle)))
                 {
                     this.Position = new Vector2(this.PositionOld.X, this.Position.Y);
+                    this.Speed = new Vector2(this.InitialSpeed.X, this.Speed.Y);
                 }
                 else if (!this.IsIntersecting(new Vector2(this.Position.X, this.PositionOld.Y), obstacle) && //Si le fantome X n'est pas en collision
                     this.IsIntersecting(new Vector2(this.PositionOld.X, this.Position.Y), obstacle))
+
                 {
                     this.Position = new Vector2(this.Position.X, this.PositionOld.Y);
+                    this.Speed = new Vector2(this.Speed.X, this.InitialSpeed.Y);
                     if (this.Position.Y + this._texture.Height < obstacle.Position.Y)
                     {
                         this._isOnTheGround = true;

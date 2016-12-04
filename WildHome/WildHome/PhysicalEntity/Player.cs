@@ -34,13 +34,9 @@ namespace WildHome.PhysicalEntity
                 this.ApplyForce(Utilities.Direction.Left);
 
             //SAUT
-            if (!this._isOnTheGround)
                 this._acceleration = new Vector2(this._acceleration.X, this.gravity - this._speed.Y / this._alphaY);
-            else
-            {
-                this._acceleration = new Vector2(this._acceleration.X, this._initialAcceleration.Y);
-                this._speed = new Vector2(this._speed.X, this._initialSpeed.Y);
-            }
+
+
             //On relache
             if (_keyboardState.IsKeyUp(Keys.Q) && _keyboardStateOld.IsKeyDown(Keys.Q)
                 || _keyboardState.IsKeyUp(Keys.D) && _keyboardStateOld.IsKeyDown(Keys.D))

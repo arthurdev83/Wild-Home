@@ -48,7 +48,7 @@ namespace WildHome
 
             //AJOUT DES ENTITY AU WORLD
             this._world.AddPhysicalEntity(this._player);
-            this._world.AddObstacle(new Obstacle(0, new Vector2(300, 342)));
+            this._world.AddObstacle(new Obstacle(0, new Vector2(300, 242)));
             this._world.AddObstacle(new Obstacle(1, new Vector2(0, 420)));
         }
 
@@ -82,7 +82,8 @@ namespace WildHome
             spriteBatch.DrawString(_font, "Positionold : " + this._player.PositionOld.ToString(), new Vector2(10, 35), Color.White);
             spriteBatch.DrawString(_font, "Vitesse : " + this._player.Speed.ToString(), new Vector2(10, 50), Color.White);
             spriteBatch.DrawString(_font, "Acceleration : " + this._player.Acceleration.ToString(), new Vector2(10, 65), Color.White);
-            
+            spriteBatch.DrawString(_font, "isOnTheGround : " + this._player._isOnTheGround.ToString(), new Vector2(10, 80), Color.White);
+
 
 
             spriteBatch.End();
