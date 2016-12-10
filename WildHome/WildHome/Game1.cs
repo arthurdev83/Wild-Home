@@ -15,7 +15,7 @@ namespace WildHome
         SpriteBatch spriteBatch;
 
         private World _world;
-        private Camera2d _camera;
+        private Camera2D _camera;
         private SpriteFont _font;
 
         private Player _player;
@@ -51,7 +51,7 @@ namespace WildHome
             this._world.AddPhysicalEntity(this._player);
             this._world.AddObstacle(new Obstacle(0, new Vector2(300, 242)));
             this._world.AddObstacle(new Obstacle(1, new Vector2(0, 420)));
-            this._camera = new Camera2d(GraphicsDevice.Viewport, 1000,1000, 1.0f);
+            this._camera = new Camera2D();
         }
 
 
@@ -65,7 +65,7 @@ namespace WildHome
         {
 
             this._world.Update(gameTime);
-
+            this._camera.Pos = this._player.Position;
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             
@@ -76,8 +76,7 @@ namespace WildHome
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            //spriteBatch.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, this._camera.GetTransformation());
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null,  this._camera.get_transformation(GraphicsDevice));
             this._world.Draw(spriteBatch);
 
             spriteBatch.DrawString(_font, "Position : " + this._player.Position.ToString(), new Vector2(10, 20), Color.White);
