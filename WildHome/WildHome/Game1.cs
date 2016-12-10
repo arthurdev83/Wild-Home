@@ -51,7 +51,7 @@ namespace WildHome
 
             //AJOUT DES ENTITY AU WORLD
             this._world.AddPhysicalEntity(this._player);
-            this._world.AddObstacle(new Obstacle(0, new Vector2(300, 342)));
+            this._world.AddObstacle(new Obstacle(0, new Vector2(300, 82)));
             this._world.AddObstacle(new Obstacle(1, new Vector2(0, 420)));
         }
 

@@ -67,8 +67,8 @@ namespace WildHome.Physics
         //Add Obstacle
         public void AddObstacle(Obstacle obstacle)
         {
-            World.OBSTACLE_COUNT = obstacles.Count;
             this.obstacles.Add(obstacle);
+            World.OBSTACLE_COUNT = obstacles.Count;
         }
     }
 }

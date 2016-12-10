@@ -26,12 +26,14 @@ namespace WildHome.PhysicalEntity
                 {
                     if (this.Position.X > this.PositionOld.X)
                     {
-                        for (int i = 1; !this.IsIntersecting(new Vector2(this.PositionOld.X + i, this.PositionOld.Y), obstacle); i++)
-                        {
-                            Console.WriteLine(i);
-                            this.PositionOld = new Vector2(this.PositionOld.X + i, this.PositionOld.Y);
-                        }
-                        this.Position = new Vector2(this.PositionOld.X, this.Position.Y);
+
+                        this.Position = new Vector2(DeplacementCollisionXRight(obstacle), this.Position.Y);
+                        this.Speed = new Vector2(this.InitialSpeed.X, this.Speed.Y);
+                    }
+                    if (this.Position.X < this.PositionOld.X)
+                    {
+
+                        this.Position = new Vector2(DeplacementCollisionXLeft(obstacle), this.Position.Y);
                         this.Speed = new Vector2(this.InitialSpeed.X, this.Speed.Y);
                     }
 
@@ -45,17 +47,21 @@ namespace WildHome.PhysicalEntity
                     if (this.Position.Y > this.PositionOld.Y)
                     {
 
-                        this.Position = new Vector2(this.Position.X, DeplacementCollisionY(obstacle));
+                        this.Position = new Vector2(this.Position.X, DeplacementCollisionYFall(obstacle));
                         this.Speed = new Vector2(this.Speed.X, this.InitialSpeed.Y);
                     }
-                    //if (this.Position.Y + this._texture.Height < obstacle.Position.Y+1)
-                    //{
-                    //    this._isOnTheGround = true;
-                    //}
+                    if (this.Position.Y < this.PositionOld.Y)
+                    {
+
+                        this.Position = new Vector2(this.Position.X, DeplacementCollisionYUp(obstacle));
+                        this.Speed = new Vector2(this.Speed.X, this.InitialSpeed.Y);
+                    }
+
                 }
-                this._isOnTheGround = true;
 
             }
+            if (this.IsIntersecting(new Vector2(this.Position.X, this.Position.Y +1), obstacle))
+                this._isOnTheGround = true;
             else
             {
                 if (countObstacle == World.OBSTACLE_COUNT)
@@ -70,15 +76,47 @@ namespace WildHome.PhysicalEntity
             countObstacle++;
         }
 
-        public int DeplacementCollisionY(PhysicalObject obstacle)
+        public int DeplacementCollisionXLeft(PhysicalObject obstacle)
+        {
+            int movement_X = 0;
+            for (int i = (int)this.PositionOld.X; !this.IsIntersecting(new Vector2(i, this.Position.Y), obstacle); i--)
+            {
+                movement_X = i;
+            }
+            return movement_X;
+        }
+
+        public int DeplacementCollisionXRight(PhysicalObject obstacle)
+        {
+            int movement_X = 0;
+            for (int i = (int)this.PositionOld.X; !this.IsIntersecting(new Vector2(i, this.Position.Y), obstacle); i++)
+            {
+                movement_X = i;
+            }
+            return movement_X;
+        }
+
+
+        public int DeplacementCollisionYFall(PhysicalObject obstacle)
         {
             int movement_Y = 0;
             for (int i = (int)this.PositionOld.Y; !this.IsIntersecting(new Vector2(this.Position.X, i), obstacle); i++)
             {
                 movement_Y = i;
-                Console.WriteLine(movement_Y);
             }
             return movement_Y;
         }
+
+        public int DeplacementCollisionYUp(PhysicalObject obstacle)
+        {
+            int movement_Y = 0;
+            for (int i = (int)this.PositionOld.Y; !this.IsIntersecting(new Vector2(this.Position.X, i), obstacle); i--)
+            {
+                movement_Y = i;
+            }
+            return movement_Y;
+        }
+
+
     }
 }
