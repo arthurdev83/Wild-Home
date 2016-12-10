@@ -13,6 +13,8 @@ namespace WildHome
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        private Camera2d _camera;
+
         private Entity.Player _joueur;
         private Physics.PhysicalObject _obstacle;
         private SpriteFont _font;
@@ -41,6 +43,8 @@ namespace WildHome
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             _font = Content.Load<SpriteFont>("maFont");
+
+            this._camera = new Camera2d(GraphicsDevice.Viewport, 1000,1000, 1.0f);
 
             this._joueur.LoadContent(Content);
             this._obstacle.LoadContent(Content);
@@ -75,6 +79,8 @@ namespace WildHome
 
             }
 
+            this._camera.Pos = this._joueur.Position;
+
             base.Update(gameTime);
         }
 
@@ -82,7 +88,7 @@ namespace WildHome
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, this._camera.GetTransformation());
             spriteBatch.DrawString(_font, "Position : " + this._joueur.Position.ToString(), new Vector2(10, 20), Color.White);
             spriteBatch.DrawString(_font, "Vitesse : " + this._joueur.Speed.ToString(), new Vector2(10, 35), Color.White);
             spriteBatch.DrawString(_font, "Acceleration : " + this._joueur.Acceleration.ToString(), new Vector2(10, 50), Color.White);
