@@ -6,6 +6,8 @@ namespace WildHome.PhysicalEntity
 {
     abstract class Entity : PhysicalObject
     {
+        public int countObstacle = 0;
+
         public bool IsIntersecting(Vector2 position, PhysicalObject box2) //Ne marche qu'avec des rectangles AABB
         {
             return (position.X < box2.Position.X + box2.Texture.Width &&
@@ -51,17 +53,21 @@ namespace WildHome.PhysicalEntity
                     //    this._isOnTheGround = true;
                     //}
                 }
-
-            }
-            if (this.IsIntersecting(new Vector2(this.Position.X, this.Position.Y + 1), obstacle))
-            {
                 this._isOnTheGround = true;
-                Console.WriteLine("coucou");
+
             }
             else
             {
-                this._isOnTheGround = false;
+                if (countObstacle == World.OBSTACLE_COUNT)
+                {
+                    this._isOnTheGround = false;
+                }
             }
+            if (countObstacle == World.OBSTACLE_COUNT)
+            {
+                countObstacle = 0;
+            }
+            countObstacle++;
         }
 
         public int DeplacementCollisionY(PhysicalObject obstacle)

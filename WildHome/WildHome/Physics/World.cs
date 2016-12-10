@@ -7,10 +7,11 @@ namespace WildHome.Physics
 {
     class World
     {
+        public static int OBSTACLE_COUNT;
+
         //VARIABLE
         private List<Entity> physicalEntities;
         private List<Obstacle> obstacles;
-
 
         //CONSTRUCTOR
         public World()
@@ -66,6 +67,7 @@ namespace WildHome.Physics
         //Add Obstacle
         public void AddObstacle(Obstacle obstacle)
         {
+            World.OBSTACLE_COUNT = obstacles.Count;
             this.obstacles.Add(obstacle);
         }
     }
