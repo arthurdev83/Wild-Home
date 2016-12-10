@@ -76,9 +76,10 @@ namespace WildHome
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            //spriteBatch.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, this._camera.GetTransformation());
+            spriteBatch.Begin();
             this._world.Draw(spriteBatch);
 
-            
             spriteBatch.DrawString(_font, "Position : " + this._player.Position.ToString(), new Vector2(10, 20), Color.White);
             spriteBatch.DrawString(_font, "Positionold : " + this._player.PositionOld.ToString(), new Vector2(10, 35), Color.White);
             spriteBatch.DrawString(_font, "Vitesse : " + this._player.Speed.ToString(), new Vector2(10, 50), Color.White);
@@ -86,8 +87,6 @@ namespace WildHome
             spriteBatch.DrawString(_font, "isOnTheGround : " + this._player._isOnTheGround.ToString(), new Vector2(10, 80), Color.White);
 
 
-
-            spriteBatch.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, this._camera.GetTransformation());
             spriteBatch.End();
 
             base.Draw(gameTime);
