@@ -18,28 +18,61 @@ namespace WildHome.PhysicalEntity
         {
             if (this.IsIntersecting(this.Position, obstacle))
             {
-                Console.WriteLine("Touche un obstacle !");
+                //Console.WriteLine("Touche un obstacle !");
                 if ((this.IsIntersecting(new Vector2(this.Position.X, this.PositionOld.Y), obstacle) && //Si le fantome Y n'est pas en collision
                     !this.IsIntersecting(new Vector2(this.PositionOld.X, this.Position.Y), obstacle)))
                 {
-                    this.Position = new Vector2(this.PositionOld.X, this.Position.Y);
-                    this.Speed = new Vector2(this.InitialSpeed.X, this.Speed.Y);
+                    if (this.Position.X > this.PositionOld.X)
+                    {
+                        for (int i = 1; !this.IsIntersecting(new Vector2(this.PositionOld.X + i, this.PositionOld.Y), obstacle); i++)
+                        {
+                            Console.WriteLine(i);
+                            this.PositionOld = new Vector2(this.PositionOld.X + i, this.PositionOld.Y);
+                        }
+                        this.Position = new Vector2(this.PositionOld.X, this.Position.Y);
+                        this.Speed = new Vector2(this.InitialSpeed.X, this.Speed.Y);
+                    }
+
                 }
                 else if (!this.IsIntersecting(new Vector2(this.Position.X, this.PositionOld.Y), obstacle) && //Si le fantome X n'est pas en collision
-                    this.IsIntersecting(new Vector2(this.PositionOld.X, this.Position.Y), obstacle) || 
+                    this.IsIntersecting(new Vector2(this.PositionOld.X, this.Position.Y), obstacle) ||
                     (!this.IsIntersecting(new Vector2(this.Position.X, this.PositionOld.Y), obstacle) && //Ou si le des deux fantomes ne sont pas en collision
                     !this.IsIntersecting(new Vector2(this.PositionOld.X, this.Position.Y), obstacle)))
 
                 {
-                    this.Position = new Vector2(this.Position.X, this.PositionOld.Y);
-                    this.Speed = new Vector2(this.Speed.X, this.InitialSpeed.Y);
-                    if (this.Position.Y + this._texture.Height < obstacle.Position.Y)
+                    if (this.Position.Y > this.PositionOld.Y)
                     {
-                        this._isOnTheGround = true;
+
+                        this.Position = new Vector2(this.Position.X, DeplacementCollisionY(obstacle));
+                        this.Speed = new Vector2(this.Speed.X, this.InitialSpeed.Y);
                     }
+                    //if (this.Position.Y + this._texture.Height < obstacle.Position.Y+1)
+                    //{
+                    //    this._isOnTheGround = true;
+                    //}
                 }
 
             }
+            if (this.IsIntersecting(new Vector2(this.Position.X, this.Position.Y + 1), obstacle))
+            {
+                this._isOnTheGround = true;
+                Console.WriteLine("coucou");
+            }
+            else
+            {
+                this._isOnTheGround = false;
+            }
+        }
+
+        public int DeplacementCollisionY(PhysicalObject obstacle)
+        {
+            int movement_Y = 0;
+            for (int i = (int)this.PositionOld.Y; !this.IsIntersecting(new Vector2(this.Position.X, i), obstacle); i++)
+            {
+                movement_Y = i;
+                Console.WriteLine(movement_Y);
+            }
+            return movement_Y;
         }
     }
 }
