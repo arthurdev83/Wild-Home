@@ -1,21 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
 
 namespace WildHome.Physics
 {
-    class PhysicalObject
+    class PhysicalObject : Sprite
     {
         //VARIABLES
-
-        private Texture2D _texture;
-
         protected float _mass;
         protected float _angle;
         protected float _vitesseMaxX; // Vitesse max sur X(a multiplier par alphaX pour obtenir la vitesse en pixel/tics)
@@ -29,6 +18,8 @@ namespace WildHome.Physics
         protected Vector2 _initialPosition;
         protected Vector2 _initialSpeed;
         protected Vector2 _initialAcceleration;
+
+        public bool _isOnTheGround;
 
         protected float gravity;
         private World _world;
@@ -86,19 +77,13 @@ namespace WildHome.Physics
         {
             this._mass = 0;
             this._angle = 0;
-            this.gravity = 1.45f;
+            this.gravity = Ressources.GRAVITY;
 
             this._position = Vector2.Zero;
             this._speed = Vector2.Zero;
             this._acceleration = Vector2.Zero;
         }
 
-
-        //METHODE
-        public virtual void LoadContent(ContentManager content)
-        {
-            this._texture = content.Load<Texture2D>("player");
-        }
 
         public virtual void Update(GameTime gameTime)
         {
@@ -108,24 +93,13 @@ namespace WildHome.Physics
 
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(this._texture, this._position, Color.White);
-        }
-
-        //Tester si on est au sol
-        public bool IsOnTheFloor()
-        {
-            return (this.Position.Y > 400);
-        }
-
-        //Appliquer une impulsion
+        //Appliquer une impulsion verticale
         public void ApplyImpulsion(int strength)
         {
             this._speed = new Vector2(this._speed.X, -strength);
         }
 
-        //Appliquer une force directionnelle
+        //Appliquer une force directionnelle horizontale
         public void ApplyForce(Utilities.Direction dir)
         {
             this._acceleration = new Vector2(((dir == 0 ? -1 : 1) * this._vitesseMaxX) - this._speed.X / this._alphaX, this._acceleration.Y);
@@ -135,14 +109,6 @@ namespace WildHome.Physics
         {
             this._speed = new Vector2(this._initialSpeed.X, this._speed.Y);
             this._acceleration = new Vector2(this._initialAcceleration.X, this._acceleration.Y);
-        }
-
-        public bool IsIntersecting(Vector2 position, Physics.PhysicalObject box2) //Ne marche qu'avec des rectangles AABB
-        {
-            return (position.X < box2.Position.X + box2._texture.Width &&
-                    position.X + this._texture.Width > box2.Position.X &&
-                    position.Y < box2.Position.Y + box2._texture.Height &&
-                    position.Y + this._texture.Height > box2.Position.Y);
         }
     }
 }

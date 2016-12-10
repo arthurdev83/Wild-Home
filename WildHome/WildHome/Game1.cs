@@ -1,7 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
+using WildHome.PhysicalEntity;
+using WildHome.Physics;
 
 namespace WildHome
 {
@@ -13,11 +14,11 @@ namespace WildHome
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        private World _world;
         private Camera2d _camera;
-
-        private Entity.Player _joueur;
-        private Physics.PhysicalObject _obstacle;
         private SpriteFont _font;
+
+        private Player _player;
 
         public Game1()
         {
@@ -28,26 +29,29 @@ namespace WildHome
 
         protected override void Initialize()
         {
+            Ressources.Initialize();
+            Ressources.CONTENT = Content;
+
             this.IsMouseVisible = true;
 
-            this._joueur = new Entity.Player();
-            this. _obstacle = new Physics.PhysicalObject();
-            this._obstacle.Position = new Vector2(200, 342);
-
+            this._world = new World();
+            this._player = new Player();
             base.Initialize();
         }
-        
+
 
         protected override void LoadContent()
         {
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            _font = Content.Load<SpriteFont>("maFont");
+            this._font = Content.Load<SpriteFont>("maFont");
 
+            //AJOUT DES ENTITY AU WORLD
+            this._world.AddPhysicalEntity(this._player);
+            this._world.AddObstacle(new Obstacle(0, new Vector2(300, 242)));
+            this._world.AddObstacle(new Obstacle(1, new Vector2(0, 420)));
             this._camera = new Camera2d(GraphicsDevice.Viewport, 1000,1000, 1.0f);
-
-            this._joueur.LoadContent(Content);
-            this._obstacle.LoadContent(Content);
         }
 
 
@@ -60,27 +64,11 @@ namespace WildHome
         protected override void Update(GameTime gameTime)
         {
 
-            this._joueur.Update(gameTime);
+            this._world.Update(gameTime);
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            //GESTION DE COLLISION
-            if (this._joueur.IsIntersecting(this._joueur.Position, this._obstacle))
-            {
-                if (this._joueur.IsIntersecting(new Vector2(this._joueur.Position.X, this._joueur.PositionOld.Y), this._obstacle))
-                {
-                    
-                }
-
-
-
-
-
-            }
-
-            this._camera.Pos = this._joueur.Position;
-
+            
             base.Update(gameTime);
         }
 
@@ -88,12 +76,18 @@ namespace WildHome
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            this._world.Draw(spriteBatch);
+
+            
+            spriteBatch.DrawString(_font, "Position : " + this._player.Position.ToString(), new Vector2(10, 20), Color.White);
+            spriteBatch.DrawString(_font, "Positionold : " + this._player.PositionOld.ToString(), new Vector2(10, 35), Color.White);
+            spriteBatch.DrawString(_font, "Vitesse : " + this._player.Speed.ToString(), new Vector2(10, 50), Color.White);
+            spriteBatch.DrawString(_font, "Acceleration : " + this._player.Acceleration.ToString(), new Vector2(10, 65), Color.White);
+            spriteBatch.DrawString(_font, "isOnTheGround : " + this._player._isOnTheGround.ToString(), new Vector2(10, 80), Color.White);
+
+
+
             spriteBatch.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, this._camera.GetTransformation());
-            spriteBatch.DrawString(_font, "Position : " + this._joueur.Position.ToString(), new Vector2(10, 20), Color.White);
-            spriteBatch.DrawString(_font, "Vitesse : " + this._joueur.Speed.ToString(), new Vector2(10, 35), Color.White);
-            spriteBatch.DrawString(_font, "Acceleration : " + this._joueur.Acceleration.ToString(), new Vector2(10, 50), Color.White);
-            this._joueur.Draw(spriteBatch);
-            this._obstacle.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
