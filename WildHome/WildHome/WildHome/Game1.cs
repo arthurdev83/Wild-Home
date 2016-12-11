@@ -48,7 +48,7 @@ namespace WildHome
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            this._font = Content.Load<SpriteFont>("maFont");
+            this._font = Content.Load<SpriteFont>("arial");
 
             //AJOUT DES ENTITY AU WORLD
             this._world.AddPhysicalEntity(this._player);
