@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using WildHome.PhysicalEntity;
 using WildHome.Physics;
-
+using System;
 namespace WildHome
 {
     /// <summary>
@@ -29,6 +29,9 @@ namespace WildHome
 
         protected override void Initialize()
         {
+            //this.TargetElapsedTime = TimeSpan.FromMilliseconds(500);
+            //this.IsFixedTimeStep = true;
+            //graphics.SynchronizeWithVerticalRetrace = false;
             Ressources.Initialize();
             Ressources.CONTENT = Content;
 
@@ -49,7 +52,7 @@ namespace WildHome
 
             //AJOUT DES ENTITY AU WORLD
             this._world.AddPhysicalEntity(this._player);
-            this._world.AddObstacle(new Obstacle(0, new Vector2(300, 242)));
+            this._world.AddObstacle(new Obstacle(0, new Vector2(300, 82)));
             this._world.AddObstacle(new Obstacle(1, new Vector2(0, 420)));
             this._camera = new Camera2D();
         }
