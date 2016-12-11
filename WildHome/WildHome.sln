@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.25920.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WildHome", "WildHome\WildHome.csproj", "{30323C29-D5B8-4EAD-8B32-25D93C53025D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WildHome", "WildHome\WildHome\WildHome.csproj", "{8E5F3263-6498-4F36-901E-FF01F72C68CB}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "WildHomeContent", "WildHome\WildHomeContent\WildHomeContent.contentproj", "{FBD9E02A-5869-4770-8CFE-48D9B544DA9C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,12 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{30323C29-D5B8-4EAD-8B32-25D93C53025D}.Debug|x86.ActiveCfg = Debug|x86
-		{30323C29-D5B8-4EAD-8B32-25D93C53025D}.Debug|x86.Build.0 = Debug|x86
-		{30323C29-D5B8-4EAD-8B32-25D93C53025D}.Release|x86.ActiveCfg = Release|x86
-		{30323C29-D5B8-4EAD-8B32-25D93C53025D}.Release|x86.Build.0 = Release|x86
+		{8E5F3263-6498-4F36-901E-FF01F72C68CB}.Debug|x86.ActiveCfg = Debug|x86
+		{8E5F3263-6498-4F36-901E-FF01F72C68CB}.Debug|x86.Build.0 = Debug|x86
+		{8E5F3263-6498-4F36-901E-FF01F72C68CB}.Release|x86.ActiveCfg = Release|x86
+		{8E5F3263-6498-4F36-901E-FF01F72C68CB}.Release|x86.Build.0 = Release|x86
+		{FBD9E02A-5869-4770-8CFE-48D9B544DA9C}.Debug|x86.ActiveCfg = Debug|x86
+		{FBD9E02A-5869-4770-8CFE-48D9B544DA9C}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
