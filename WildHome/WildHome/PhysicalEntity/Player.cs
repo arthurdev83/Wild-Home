@@ -11,6 +11,7 @@ namespace WildHome.PhysicalEntity
 
         public Player()
         {
+            this._position = new Vector2(0, 300);
             this._initialSpeed = new Vector2(0, 0);
             this._initialAcceleration = new Vector2(0, 0);
             this._speed = this._initialSpeed;
@@ -45,7 +46,7 @@ namespace WildHome.PhysicalEntity
             //Gestion du saut
             if (_keyboardState.IsKeyDown(Keys.Space) && _keyboardStateOld.IsKeyDown(Keys.Space) && this._isOnTheGround)
             {
-                this._isOnTheGround = false;
+                //this._isOnTheGround = false;
                 this.ApplyImpulsion(20);
             }
 
