@@ -20,6 +20,11 @@ namespace WildHome
 
         private Player _player;
 
+        //LIGHT SYSTEM ENGINE
+        Texture2D rect;
+        float sc;
+        Color[] dataLight;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -29,9 +34,7 @@ namespace WildHome
 
         protected override void Initialize()
         {
-            //this.TargetElapsedTime = TimeSpan.FromMilliseconds(500);
-            //this.IsFixedTimeStep = true;
-            //graphics.SynchronizeWithVerticalRetrace = false;
+
             Ressources.Initialize();
             Ressources.CONTENT = Content;
 
@@ -50,11 +53,16 @@ namespace WildHome
             spriteBatch = new SpriteBatch(GraphicsDevice);
             this._font = Content.Load<SpriteFont>("arial");
 
+            //LIGHT
+            rect = new Texture2D(graphics.GraphicsDevice, 800, 480);
+            dataLight = new Color[800 * 480];
+
+
             //AJOUT DES ENTITY AU WORLD
             this._world.AddPhysicalEntity(this._player);
             this._world.AddObstacle(new Obstacle(0, new Vector2(300, 82)));
             this._world.AddObstacle(new Obstacle(1, new Vector2(0, 420)));
-            this._camera = new Camera2D();
+            this._camera = new Camera2D(GraphicsDevice.Viewport, 1280,720, 1f);
         }
 
 
@@ -63,25 +71,62 @@ namespace WildHome
             // TODO: Unload any non ContentManager content here
         }
 
+        private void UpdateAmbient(int value)
+        {
+            for (int i = 0; i < dataLight.Length; ++i)
+            {
+                dataLight[i] = new Color(dataLight[i].R, dataLight[i].G, dataLight[i].B, dataLight[i].A + value);
+            }
+            rect.SetData(dataLight);
+        }
+
+        private void SetPixel(Vector2 pos, Color color)
+        {
+            dataLight[Convert.ToInt32(pos.X + (800 * pos.Y))] = color;
+        }
 
         protected override void Update(GameTime gameTime)
         {
+
+            Matrix inverse = Matrix.Invert(this._camera.GetTransformation());
+            Vector2 mousePos = Vector2.Transform(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), inverse);
+
+            if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+            {
+                SetPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), new Color(255, 0, 0, 0));
+            }
 
             this._world.Update(gameTime);
             this._camera.Pos = this._player.Position;
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            
+
+            //Change Ambient
+            if (Mouse.GetState().ScrollWheelValue > sc)
+            {
+                UpdateAmbient(10);
+            }
+            else if (Mouse.GetState().ScrollWheelValue < sc)
+            {
+                UpdateAmbient(-10);
+            }
+            sc = Mouse.GetState().ScrollWheelValue;
+
+            //UPDATE COLOR
+            rect.SetData(dataLight);
+
+
             base.Update(gameTime);
         }
+
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null,  this._camera.get_transformation(GraphicsDevice));
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null,  this._camera.GetTransformation());
             this._world.Draw(spriteBatch);
-
+            spriteBatch.Draw(rect, this._camera.Pos - new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2), Color.White);
             spriteBatch.DrawString(_font, "Position : " + this._player.Position.ToString(), new Vector2(10, 20), Color.White);
             spriteBatch.DrawString(_font, "Positionold : " + this._player.PositionOld.ToString(), new Vector2(10, 35), Color.White);
             spriteBatch.DrawString(_font, "Vitesse : " + this._player.Speed.ToString(), new Vector2(10, 50), Color.White);

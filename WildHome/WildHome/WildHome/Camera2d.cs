@@ -3,23 +3,43 @@ using Microsoft.Xna.Framework.Graphics;
 
 public class Camera2D
 {
-    protected float _zoom; // Camera Zoom
-    public Matrix _transform; // Matrix Transform
-    public Vector2 _pos; // Camera Position
-    protected float _rotation; // Camera Rotation
+    private const float zoomUpperLimit = 1.5f;
+    private const float zoomLowerLimit = .5f;
 
-    public Camera2D()
+    private float _zoom;
+    private Matrix _transform;
+    private Vector2 _pos;
+    private float _rotation;
+    private int _viewportWidth;
+    private int _viewportHeight;
+    private int _worldWidth;
+    private int _worldHeight;
+
+    public Camera2D(Viewport viewport, int worldWidth,
+       int worldHeight, float initialZoom)
     {
-        _zoom = 1.0f;
+        _zoom = initialZoom;
         _rotation = 0.0f;
         _pos = Vector2.Zero;
+        _viewportWidth = viewport.Width;
+        _viewportHeight = viewport.Height;
+        _worldWidth = worldWidth;
+        _worldHeight = worldHeight;
     }
 
-    // Sets and gets zoom
+    #region Properties
+
     public float Zoom
     {
         get { return _zoom; }
-        set { _zoom = value; if (_zoom < 0.1f) _zoom = 0.1f; } // Negative zoom will flip image
+        set
+        {
+            _zoom = value;
+            if (_zoom < zoomLowerLimit)
+                _zoom = zoomLowerLimit;
+            if (_zoom > zoomUpperLimit)
+                _zoom = zoomUpperLimit;
+        }
     }
 
     public float Rotation
@@ -28,27 +48,53 @@ public class Camera2D
         set { _rotation = value; }
     }
 
-    // Auxiliary function to move the camera
     public void Move(Vector2 amount)
     {
         _pos += amount;
     }
-    // Get set position
+
     public Vector2 Pos
     {
         get { return _pos; }
-        set { _pos = value; }
+        set
+        {
+            float leftBarrier = (float)_viewportWidth * .5f / _zoom;
+            float rightBarrier = _worldWidth - (float)_viewportWidth * .5f / _zoom;
+            float topBarrier = _worldHeight - (float)_viewportHeight * .5f / _zoom;
+            float bottomBarrier = (float)_viewportHeight * .5f / _zoom;
+
+            _pos = value;
+            if (_pos.X < leftBarrier)
+                _pos.X = leftBarrier;
+            if (_pos.X > rightBarrier)
+                _pos.X = rightBarrier;
+            if (_pos.Y > topBarrier)
+                _pos.Y = topBarrier;
+            if (_pos.Y < bottomBarrier)
+                _pos.Y = bottomBarrier;
+        }
     }
 
-    public Matrix get_transformation(GraphicsDevice graphicsDevice)
+    public int ViewportWidth
     {
-        Viewport viewPort = graphicsDevice.Viewport;
+        get { return this._viewportWidth; }
+    }
 
-        _transform =       // Thanks to o KB o for this solution
-          Matrix.CreateTranslation(new Vector3(-_pos.X, -_pos.Y, 0)) *
-                                     Matrix.CreateRotationZ(Rotation) *
-                                     Matrix.CreateScale(new Vector3(Zoom, Zoom, 1)) *
-                                     Matrix.CreateTranslation(new Vector3(viewPort.Width * 0.5f, viewPort.Height * 0.5f, 0));
+    public int ViewportHeight
+    {
+        get { return this._viewportHeight; }
+    }
+
+    #endregion
+
+    public Matrix GetTransformation()
+    {
+        _transform =
+           Matrix.CreateTranslation(new Vector3(-_pos.X, -_pos.Y, 0)) *
+           Matrix.CreateRotationZ(Rotation) *
+           Matrix.CreateScale(new Vector3(Zoom, Zoom, 1)) *
+           Matrix.CreateTranslation(new Vector3(_viewportWidth * 0.5f, _viewportHeight * 0.5f, 0));
+
         return _transform;
     }
 
