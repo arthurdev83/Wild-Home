@@ -71,7 +71,15 @@ namespace WildHome
             this._camera.Pos = this._player.Position;
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            
+
+            Matrix inverse = Matrix.Invert(this._camera.get_transformation(GraphicsDevice));
+            Vector2 mousePos = Vector2.Transform(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), inverse);
+
+            if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+            {
+                this._world.AddObstacle(new Obstacle(0, new Vector2(Mouse.GetState().X, Mouse.GetState().Y)));
+            }
+
             base.Update(gameTime);
         }
 
@@ -79,7 +87,7 @@ namespace WildHome
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null,  this._camera.get_transformation(GraphicsDevice));
+            spriteBatch.Begin(/*SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null,  this._camera.get_transformation(GraphicsDevice)*/);
             this._world.Draw(spriteBatch);
 
             spriteBatch.DrawString(_font, "Position : " + this._player.Position.ToString(), new Vector2(10, 20), Color.White);
