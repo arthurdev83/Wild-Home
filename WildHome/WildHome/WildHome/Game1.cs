@@ -59,7 +59,7 @@ namespace WildHome
             dataLight = new Color[800 * 480];
             for (int i = 0; i < dataLight.Length; ++i)
             {
-                dataLight[i] = new Color(0,0,0,0);
+                dataLight[i] = new Color(0, 0, 0, 0);
             }
             rect.SetData(dataLight);
 
@@ -67,7 +67,7 @@ namespace WildHome
             this._world.AddPhysicalEntity(this._player);
             this._world.AddObstacle(new Obstacle(0, new Vector2(300, 82)));
             this._world.AddObstacle(new Obstacle(1, new Vector2(0, 420)));
-            this._camera = new Camera2D(GraphicsDevice.Viewport, 1280,720, 1f);
+            this._camera = new Camera2D(GraphicsDevice.Viewport, 1280, 720, 1f);
         }
 
 
@@ -108,6 +108,8 @@ namespace WildHome
             {
                 test = true;
                 Vector2 mousePosSave = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
+                int lightDiffuse = 5000;
+                int lightCenter = 42;
                 for (int x = 0; x < 800; x++)
                 {
                     for (int y = 0; y < 480; y++)
@@ -115,9 +117,11 @@ namespace WildHome
                         //Console.WriteLine(Convert.ToInt32(Math.Sqrt(((x - mousePosSave.X) * (x - mousePosSave.X)) + ((y - mousePosSave.Y) * (y - mousePosSave.Y)))));
                         if (new Vector2(x, y) != mousePosSave)
                         {
-                            int alpha = 255 - 255 / Convert.ToInt32(Math.Sqrt(((x - mousePosSave.X) * (x - mousePosSave.X)) + ((y - mousePosSave.Y) * (y - mousePosSave.Y))));
-                            SetPixel(new Vector2(x, y), new Color(0, 0, 0, 255 - ((255 - alpha) + (255- GetPixel(new Vector2(x, y)).A))) );
+                            int alpha = 255 - lightDiffuse / Convert.ToInt32(Math.Sqrt(((x - mousePosSave.X) * (x - mousePosSave.X)) + ((y - mousePosSave.Y) * (y - mousePosSave.Y))) + lightCenter);
+                            SetPixel(new Vector2(x, y), new Color(0, 0, 0, alpha + GetPixel(new Vector2(x, y)).A - 255));
                         }
+                        else
+                            SetPixel(new Vector2(x, y), new Color(0, 0, 0, (255 - lightDiffuse / Convert.ToInt32(Math.Sqrt(2) + lightCenter) + GetPixel(new Vector2(x, y)).A - 255)));
                     }
                 }
             }
@@ -150,7 +154,7 @@ namespace WildHome
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null,  this._camera.GetTransformation());
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, this._camera.GetTransformation());
             this._world.Draw(spriteBatch);
             spriteBatch.Draw(rect, this._camera.Pos - new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2), Color.White);
             spriteBatch.DrawString(_font, "Position : " + this._player.Position.ToString(), new Vector2(10, 20), Color.White);
