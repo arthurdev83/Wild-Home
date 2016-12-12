@@ -19,6 +19,7 @@ namespace WildHome
         private SpriteFont _font;
 
         private Player _player;
+        private bool test = false;
 
         //LIGHT SYSTEM ENGINE
         Texture2D rect;
@@ -56,7 +57,11 @@ namespace WildHome
             //LIGHT
             rect = new Texture2D(graphics.GraphicsDevice, 800, 480);
             dataLight = new Color[800 * 480];
-
+            for (int i = 0; i < dataLight.Length; ++i)
+            {
+                dataLight[i] = new Color(0,0,0,0);
+            }
+            rect.SetData(dataLight);
 
             //AJOUT DES ENTITY AU WORLD
             this._world.AddPhysicalEntity(this._player);
@@ -82,8 +87,13 @@ namespace WildHome
 
         private void SetPixel(Vector2 pos, Color color)
         {
-            dataLight[Convert.ToInt32(pos.X + (800 * pos.Y))] = color;
+            dataLight[Convert.ToInt32(pos.X + (800 * pos.Y))] = new Color(color.R, color.G, color.B, color.A);
         }
+        private Color GetPixel(Vector2 pos)
+        {
+            return dataLight[Convert.ToInt32(pos.X + (800 * pos.Y))];
+        }
+
 
         protected override void Update(GameTime gameTime)
         {
@@ -91,9 +101,25 @@ namespace WildHome
             Matrix inverse = Matrix.Invert(this._camera.GetTransformation());
             Vector2 mousePos = Vector2.Transform(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), inverse);
 
-            if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+            if (Mouse.GetState().RightButton == ButtonState.Pressed)
+                Console.WriteLine("ALPHA : " + GetPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y)).A);
+
+            if (Mouse.GetState().LeftButton == ButtonState.Pressed && !test)
             {
-                SetPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), new Color(255, 0, 0, 0));
+                test = true;
+                Vector2 mousePosSave = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
+                for (int x = 0; x < 800; x++)
+                {
+                    for (int y = 0; y < 480; y++)
+                    {
+                        //Console.WriteLine(Convert.ToInt32(Math.Sqrt(((x - mousePosSave.X) * (x - mousePosSave.X)) + ((y - mousePosSave.Y) * (y - mousePosSave.Y)))));
+                        if (new Vector2(x, y) != mousePosSave)
+                        {
+                            int alpha = 255 - 255 / Convert.ToInt32(Math.Sqrt(((x - mousePosSave.X) * (x - mousePosSave.X)) + ((y - mousePosSave.Y) * (y - mousePosSave.Y))));
+                            SetPixel(new Vector2(x, y), new Color(0, 0, 0, 255 - ((255 - alpha) + (255- GetPixel(new Vector2(x, y)).A))) );
+                        }
+                    }
+                }
             }
 
             this._world.Update(gameTime);
