@@ -26,10 +26,16 @@ namespace WildHome
         float sc;
         Color[] dataLight;
 
+        int lightCount = 0;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            /*graphics.SynchronizeWithVerticalRetrace = true;
+            IsFixedTimeStep = false;*/
+
         }
 
 
@@ -87,13 +93,12 @@ namespace WildHome
 
         private void SetPixel(Vector2 pos, Color color)
         {
-            dataLight[Convert.ToInt32(pos.X + (800 * pos.Y))] = new Color(color.R, color.G, color.B, color.A);
+            dataLight[(int)(pos.X + (800 * pos.Y))] = new Color(color.R, color.G, color.B, color.A);
         }
         private Color GetPixel(Vector2 pos)
         {
-            return dataLight[Convert.ToInt32(pos.X + (800 * pos.Y))];
+            return dataLight[(int)(pos.X + (800 * pos.Y))];
         }
-
 
         protected override void Update(GameTime gameTime)
         {
@@ -106,10 +111,11 @@ namespace WildHome
 
             if (Mouse.GetState().LeftButton == ButtonState.Pressed && !test)
             {
+                lightCount++;
                 test = true;
                 Vector2 mousePosSave = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
-                int lightDiffuse = 5000;
-                int lightCenter = 42;
+                int lightDiffuse = 6000;
+                int lightCenter = 100;
                 for (int x = 0; x < 800; x++)
                 {
                     for (int y = 0; y < 480; y++)
@@ -117,6 +123,8 @@ namespace WildHome
                         //Console.WriteLine(Convert.ToInt32(Math.Sqrt(((x - mousePosSave.X) * (x - mousePosSave.X)) + ((y - mousePosSave.Y) * (y - mousePosSave.Y)))));
                         if (new Vector2(x, y) != mousePosSave)
                         {
+                            //TEST DEPLACER UNE LUMIERE
+                            //VOIR LES TACHE ASYNC
                             int alpha = 255 - lightDiffuse / Convert.ToInt32(Math.Sqrt(((x - mousePosSave.X) * (x - mousePosSave.X)) + ((y - mousePosSave.Y) * (y - mousePosSave.Y))) + lightCenter);
                             SetPixel(new Vector2(x, y), new Color(0, 0, 0, alpha + GetPixel(new Vector2(x, y)).A - 255));
                         }
@@ -124,6 +132,10 @@ namespace WildHome
                             SetPixel(new Vector2(x, y), new Color(0, 0, 0, (255 - lightDiffuse / Convert.ToInt32(Math.Sqrt(2) + lightCenter) + GetPixel(new Vector2(x, y)).A - 255)));
                     }
                 }
+            }
+            else if (Mouse.GetState().LeftButton == ButtonState.Released && test)
+            {
+                test = false;
             }
 
             this._world.Update(gameTime);
@@ -152,16 +164,18 @@ namespace WildHome
 
         protected override void Draw(GameTime gameTime)
         {
+            Vector2 pos = this._camera.Pos - new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, this._camera.GetTransformation());
             this._world.Draw(spriteBatch);
-            spriteBatch.Draw(rect, this._camera.Pos - new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2), Color.White);
-            spriteBatch.DrawString(_font, "Position : " + this._player.Position.ToString(), new Vector2(10, 20), Color.White);
-            spriteBatch.DrawString(_font, "Positionold : " + this._player.PositionOld.ToString(), new Vector2(10, 35), Color.White);
-            spriteBatch.DrawString(_font, "Vitesse : " + this._player.Speed.ToString(), new Vector2(10, 50), Color.White);
-            spriteBatch.DrawString(_font, "Acceleration : " + this._player.Acceleration.ToString(), new Vector2(10, 65), Color.White);
-            spriteBatch.DrawString(_font, "isOnTheGround : " + this._player._isOnTheGround.ToString(), new Vector2(10, 80), Color.White);
+            spriteBatch.Draw(rect, pos, Color.White);
+            spriteBatch.DrawString(_font, "Position : " + this._player.Position.ToString(), new Vector2(10, 20) + pos, Color.White);
+            spriteBatch.DrawString(_font, "Positionold : " + this._player.PositionOld.ToString(), new Vector2(10, 35) + pos, Color.White);
+            spriteBatch.DrawString(_font, "Vitesse : " + this._player.Speed.ToString(), new Vector2(10, 50) + pos, Color.White);
+            spriteBatch.DrawString(_font, "Acceleration : " + this._player.Acceleration.ToString(), new Vector2(10, 65) + pos, Color.White);
+            spriteBatch.DrawString(_font, "isOnTheGround : " + this._player._isOnTheGround.ToString(), new Vector2(10, 80) + pos, Color.White);
+            spriteBatch.DrawString(_font, "Light Count : " + lightCount, new Vector2(10, 95) + pos, Color.White);
 
 
             spriteBatch.End();
