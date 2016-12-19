@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera2d.cs" />
+    <Compile Include="Effects\Light.cs" />
     <Compile Include="PhysicalEntity\Entity.cs" />
     <Compile Include="PhysicalEntity\Player.cs" />
     <Compile Include="Physics\Obstacle.cs" />
@@ -96,12 +97,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WildHomeContent\WildHomeContent.contentproj">
-      <Name>WildHomeContent</Name>
-      <XnaReferenceType>Content</XnaReferenceType>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
@@ -117,6 +112,13 @@
       <ProductName>Windows Installer 4.5</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WildHomeContent\WildHomeContent.contentproj">
+      <Project>{FBD9E02A-5869-4770-8CFE-48D9B544DA9C}</Project>
+      <Name>WildHomeContent</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
