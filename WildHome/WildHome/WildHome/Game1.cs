@@ -87,11 +87,11 @@ namespace WildHome
 
         private void SetPixel(Vector2 pos, Color color)
         {
-            dataLight[Convert.ToInt32(pos.X + (800 * pos.Y))] = new Color(color.R, color.G, color.B, color.A);
+            dataLight[(int)(pos.X + (800 * pos.Y))] = new Color(color.R, color.G, color.B, color.A);
         }
         private Color GetPixel(Vector2 pos)
         {
-            return dataLight[Convert.ToInt32(pos.X + (800 * pos.Y))];
+            return dataLight[(int)(pos.X + (800 * pos.Y))];
         }
 
 
@@ -100,6 +100,10 @@ namespace WildHome
 
             Matrix inverse = Matrix.Invert(this._camera.GetTransformation());
             Vector2 mousePos = Vector2.Transform(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), inverse);
+
+            int diffuse = 2160;
+            int power = 50;
+            int center = 50;
 
             if (Mouse.GetState().RightButton == ButtonState.Pressed)
                 Console.WriteLine("ALPHA : " + GetPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y)).A);
@@ -112,15 +116,17 @@ namespace WildHome
                 {
                     for (int y = 0; y < 480; y++)
                     {
-                        //Console.WriteLine(Convert.ToInt32(Math.Sqrt(((x - mousePosSave.X) * (x - mousePosSave.X)) + ((y - mousePosSave.Y) * (y - mousePosSave.Y)))));
                         if (new Vector2(x, y) != mousePosSave)
                         {
-                            int alpha = 255 - 255 / Convert.ToInt32(Math.Sqrt(((x - mousePosSave.X) * (x - mousePosSave.X)) + ((y - mousePosSave.Y) * (y - mousePosSave.Y))));
-                            SetPixel(new Vector2(x, y), new Color(0, 0, 0, 255 - ((255 - alpha) + (255- GetPixel(new Vector2(x, y)).A))) );
+                            int alpha = 255 - diffuse / (int)(Math.Sqrt(((x - mousePosSave.X) * (x - mousePosSave.X)) + ((y - mousePosSave.Y) * (y - mousePosSave.Y))) + center);
+                            SetPixel(new Vector2(x, y), new Color(0, 0, 0, 255 - ((255 - alpha) + (255- GetPixel(new Vector2(x, y)).A)) - power) );
                         }
+                        else
+                            SetPixel(new Vector2(x, y), new Color(0, 0, 0, (255 - diffuse / (int)(Math.Sqrt(2) + center) + GetPixel(new Vector2(x, y)).A - 255 - power)));
                     }
                 }
             }
+            else if(Mouse.GetState().LeftButton == ButtonState.Released && test) { test = false; }
 
             this._world.Update(gameTime);
             this._camera.Pos = this._player.Position;
